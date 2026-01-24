@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import IOKit
 
 func getMainPort() -> mach_port_t {
     if #available(macOS 12.0, *) {
@@ -45,13 +46,17 @@ func sysctl(name: String) -> String {
 }
 
 func getData(_ device: io_registry_entry_t, _ val: String) -> Data? {
-    print("reading val " + val)
+    if ProcessInfo.processInfo.environment["HWINFO_DEBUG"] == "1" {
+        print("reading val " + val)
+    }
     let value = IORegistryEntryCreateCFProperty(device, val as CFString, kCFAllocatorDefault, 0)
     return (value?.takeRetainedValue() as? NSData) as Data?
 }
 
 func getString(_ device: io_registry_entry_t, _ val: String) -> String? {
-    print("reading val " + val)
+    if ProcessInfo.processInfo.environment["HWINFO_DEBUG"] == "1" {
+        print("reading val " + val)
+    }
     let value = IORegistryEntryCreateCFProperty(device, val as CFString, kCFAllocatorDefault, 0)
     return (value?.takeRetainedValue() as? NSString) as String?
 }
@@ -104,4 +109,3 @@ func getHwInfo() -> Bbhwinfo_HwInfo {
         $0.aoskitVersion = "com.apple.AOSKit/282 (com.apple.accountsd/113)"
     }
 }
-
