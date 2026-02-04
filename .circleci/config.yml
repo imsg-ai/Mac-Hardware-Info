@@ -1,45 +1,44 @@
 version: 2.1
 
 orbs:
-  macos: circleci/macos@2
+    macos: circleci/macos@2
 
 executors:
-  macos-executor:
-    macos:
-      xcode: "26.2.0"
-    resource_class: macos.m4pro.medium
-
+    macos-executor:
+        macos:
+            xcode: 26.2.0
+        resource_class: m4pro.medium
 jobs:
-  test:
-    executor: macos-executor
-    steps:
-      - checkout
+    test:
+        executor: macos-executor
+        steps:
+            - checkout
 
-      - run:
-          name: Check Swift version
-          command: swift --version
+            - run:
+                  name: Check Swift version
+                  command: swift --version
 
-      - run:
-          name: Create artifacts directory
-          command: mkdir -p /tmp/artifacts
+            - run:
+                  name: Create artifacts directory
+                  command: mkdir -p /tmp/artifacts
 
-      - run:
-          name: Run tests
-          environment:
-            CIRCLE_ARTIFACTS: /tmp/artifacts
-          command: swift test
+            - run:
+                  name: Run tests
+                  environment:
+                      CIRCLE_ARTIFACTS: /tmp/artifacts
+                  command: swift test
 
-      - run:
-          name: Run CLI and save base64 output
-          command: |
-            swift build -c release
-            .build/release/MacHardwareInfoCLI > /tmp/artifacts/hwinfo_base64.txt
+            - run:
+                  name: Run CLI and save base64 output
+                  command: |
+                      swift build -c release
+                      .build/release/MacHardwareInfoCLI > /tmp/artifacts/hwinfo_base64.txt
 
-      - store_artifacts:
-          path: /tmp/artifacts
-          destination: artifacts
+            - store_artifacts:
+                  path: /tmp/artifacts
+                  destination: artifacts
 
 workflows:
-  test:
-    jobs:
-      - test
+    test:
+        jobs:
+            - test
