@@ -15,6 +15,10 @@ let package = Package(
             dependencies: [
                 .product(name: "SwiftProtobuf", package: "swift-protobuf")
             ]
+        ),
+        .testTarget(
+            name: "MacHardwareInfoCLITests",
+            dependencies: ["MacHardwareInfoCLI"]
         )
     ]
 )
