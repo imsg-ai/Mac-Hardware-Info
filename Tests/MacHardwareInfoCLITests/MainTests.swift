@@ -1,5 +1,6 @@
 import XCTest
 import Foundation
+import SwiftProtobuf
 
 final class MainTests: XCTestCase {
     
@@ -36,6 +37,13 @@ final class MainTests: XCTestCase {
             let artifactPath = URL(fileURLWithPath: artifactsDir).appendingPathComponent("hwinfo_base64.txt")
             try output!.write(to: artifactPath, atomically: true, encoding: .utf8)
             print("Saved base64 output to: \(artifactPath.path)")
+            
+            // Decode protobuf and save as plain text
+            let hwInfo = try Bbhwinfo_HwInfo(serializedBytes: decodedData!)
+            let textFormat = hwInfo.textFormatString()
+            let textArtifactPath = URL(fileURLWithPath: artifactsDir).appendingPathComponent("hwinfo_text.txt")
+            try textFormat.write(to: textArtifactPath, atomically: true, encoding: .utf8)
+            print("Saved text output to: \(textArtifactPath.path)")
         }
     }
     
